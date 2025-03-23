@@ -62,7 +62,7 @@ export function WelcomeBanner() {
             </ul>
             
             <p className="text-sm text-muted-foreground">
-              Start by creating your first ghost message using the &qout; New Post&quot; button.
+              Start by creating your first ghost message using the &quot;New Post&quot; button.
             </p>
           </div>
         </DialogContent>
