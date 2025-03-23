@@ -5,29 +5,31 @@ import { ReloadIcon } from "@radix-ui/react-icons";
 const Post = dynamic(() => import("~/components/post"), {
   ssr: false,
   loading: () => (
-    <>
-      <div className="relative flex h-[40vh] md:hidden">
-        <ReloadIcon className="mr-2 mt-4 h-8 w-8 animate-spin" />
+    <div className="flex h-[40vh] w-full items-center justify-center">
+      <div className="flex flex-col items-center">
+        <ReloadIcon className="h-10 w-10 animate-spin text-primary" />
+        <p className="mt-4 text-muted-foreground">Loading conversations...</p>
       </div>
-      <div className="relative hidden h-[40vh] w-full max-w-12 md:flex">
-        <ReloadIcon className="mr-2 mt-4 h-8 w-8 animate-spin" />
-      </div>
-    </>
+    </div>
   ),
 });
 
 export default function Home() {
   return (
     <HydrateClient>
-      <div className="relative flex w-full flex-col items-center justify-center">
-        <span className="pointer-events-none mt-8 whitespace-pre-wrap bg-gradient-to-b from-black to-gray-300 bg-clip-text py-8 text-center text-6xl font-semibold leading-none text-transparent dark:from-white dark:to-slate-900/10">
-          Anonymous Posts
-        </span>
-        <span className="pointer-events-none whitespace-pre-wrap bg-gradient-to-b from-black to-gray-300 bg-clip-text p-4 pb-4 text-center">
-          Share your thoughts and experiences anonymously by posting on our
-          platform — no sign-up needed!
-        </span>
-        <Post />
+      <div className="container mx-auto px-4 pb-12 pt-6">
+        <section className="mb-8 text-center">
+          <h1 className="animate-fade-up bg-gradient-to-br from-foreground to-muted-foreground bg-clip-text font-heading text-4xl font-bold tracking-tight text-transparent sm:text-5xl md:text-6xl">
+            GhostTalk
+          </h1>
+          <p className="mx-auto mt-4 max-w-2xl animate-fade-up text-muted-foreground opacity-90 [animation-delay:200ms]">
+            Share your thoughts and experiences anonymously with GhostTalk — the safest way to express yourself freely.
+          </p>
+        </section>
+        
+        <div className="fade-in-slide-up mx-auto w-full max-w-3xl [animation-delay:400ms]">
+          <Post />
+        </div>
       </div>
     </HydrateClient>
   );
