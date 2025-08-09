@@ -155,7 +155,7 @@ export default function Post() {
       {/* Post Header */}
       <header className="flex justify-between items-center mb-4">
         <time
-          dateTime={post.createdAt}
+          dateTime={post.createdAt.toISOString()}
           className="text-xs text-muted-foreground"
           title={new Date(post.createdAt).toLocaleString()}
         >
