@@ -2,11 +2,6 @@
 Ghost-Talk
 </h1>
 
-<p align="center">
-  <a href="" target="_blank">
-    <img src="./public/logo.png?raw=true" alt="Logo" width="100"/>
-  </a>
-</p>
 
 <p align="center">
   <a href="#"><img src="https://img.shields.io/badge/typescript-%23007acc.svg?style=for-the-badge&logo=typescript&logoColor=%23ffffff"/></a>
@@ -14,25 +9,17 @@ Ghost-Talk
   <a href="#"><img src="https://img.shields.io/badge/nextjs-%2320232a.svg?style=for-the-badge&logo=nextdotjs&logoColor=white"/></a>
 </p>
 
-<p align="center">
-<a  href="https://www.youtube.com/watch?v=y0Ru3D7CQgw" target="_blank">
-    <img src="https://i9.ytimg.com/vi/y0Ru3D7CQgw/mqdefault.jpg?v=67d55de8&sqp=CPT02b4G&rs=AOn4CLCZDhpy_Bi7C1OMVqA0D1__sZZy6g" alt="Logo" width="300"/>
-</a>
-</p>
+
 
 ## What is Ghost-Talk?
 
-Welcome to **Ghost-Talk**, where everything in anonymous! Explore **[Ghost-Talk.vercel.app](https://Ghost-Talk.vercel.app)** and post anonymous posts and get anonymous replies to them.
+Welcome to **Ghost-Talk**, where everything in anonymous! Explore **[talk.nitrr.in](https://talk.nitrr.in)** and post anonymous posts and get anonymous replies to them.
 
 Share your thoughts and experiences anonymously by posting on our platform — no sign-up needed!
 
-## Images
 
-<div align="center">
-  <img src="https://api.microlink.io/?url=https://Ghost-Talk.vercel.app&screenshot=true&meta=false&embed=screenshot.url&type=jpeg&overlay.browser=dark&overlay.background=linear-gradient%28225deg%2C+%23FF057C+0%25%2C+%238D0B93+50%25%2C+%23321575+100%25%29" alt="Home Page" style="max-width: 100%;" >
-</div>
 
-## Installation 🛠️
+## Installation
 
 ### 1. Clone this repository using
 
@@ -75,11 +62,11 @@ npm start
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Favalynndev%2FGhost-Talk&env=DATABASE_URL)
 
-## Found a Bug? 🐞
+## Found a Bug? 
 
 Uh-oh, looks like you stumbled upon a bug? No worries, we're here to squash it! Just head over to our [**issues**](https://github.com/avalynndev/anonumu/issues) section on GitHub and let us know what's up.
 
-## Contributors 🤲
+## Contributors 
 
 <img height="50" src="https://contrib.rocks/image?repo=avalynndev/Ghost-Talk" />
 
