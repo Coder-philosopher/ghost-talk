@@ -18,15 +18,24 @@ export default function Home() {
   return (
     <HydrateClient>
       <div className="container mx-auto px-4 pb-12 pt-6">
-        <section className="mb-8 text-center">
-          <h1 className="animate-fade-up bg-gradient-to-br from-foreground to-muted-foreground bg-clip-text font-heading text-4xl font-bold tracking-tight text-transparent sm:text-5xl md:text-6xl">
-            GhostTalk
-          </h1>
-          <p className="mx-auto mt-4 max-w-2xl animate-fade-up text-muted-foreground opacity-90 [animation-delay:200ms]">
-            Share your thoughts and experiences anonymously with GhostTalk — the safest way to express yourself freely.
-          </p>
-        </section>
-        
+      <section className="relative my-16 w-full text-center">
+        {/* Decorative background blur */}
+        <div className="pointer-events-none absolute inset-0 -z-10 flex justify-center">
+          <div className="h-[300px] w-[300px] animate-pulse-slow rounded-full bg-gradient-to-r from-purple-500/30 via-blue-500/20 to-pink-500/30 blur-3xl dark:from-purple-800/40 dark:to-pink-800/30" />
+        </div>
+
+        {/* Main heading */}
+        <h1 className="animate-fade-up bg-gradient-to-br from-primary to-foreground bg-clip-text font-heading text-4xl font-extrabold tracking-tight text-transparent drop-shadow-md sm:text-5xl md:text-6xl">
+          GhostTalk
+        </h1>
+
+        {/* Subheading */}
+        <p className="mx-auto mt-5 max-w-2xl animate-fade-up text-lg text-muted-foreground opacity-90 [animation-delay:200ms] sm:text-xl md:text-2xl">
+          Share your thoughts and experiences <span className="font-medium text-foreground dark:text-white">anonymously</span>  the safest way to express yourself freely and authentically.
+        </p>
+
+      </section>
+
         <div className="fade-in-slide-up mx-auto w-full max-w-3xl [animation-delay:400ms]">
           <Post />
         </div>

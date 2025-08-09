@@ -1,5 +1,5 @@
 <h1 align="center">
-Anonypost
+Ghost-Talk
 </h1>
 
 <p align="center">
@@ -20,16 +20,16 @@ Anonypost
 </a>
 </p>
 
-## What is Anonypost?
+## What is Ghost-Talk?
 
-Welcome to **Anonypost**, where everything in anonymous! Explore **[Anonypost.vercel.app](https://anonypost.vercel.app)** and post anonymous posts and get anonymous replies to them.
+Welcome to **Ghost-Talk**, where everything in anonymous! Explore **[Ghost-Talk.vercel.app](https://Ghost-Talk.vercel.app)** and post anonymous posts and get anonymous replies to them.
 
 Share your thoughts and experiences anonymously by posting on our platform — no sign-up needed!
 
 ## Images
 
 <div align="center">
-  <img src="https://api.microlink.io/?url=https://anonypost.vercel.app&screenshot=true&meta=false&embed=screenshot.url&type=jpeg&overlay.browser=dark&overlay.background=linear-gradient%28225deg%2C+%23FF057C+0%25%2C+%238D0B93+50%25%2C+%23321575+100%25%29" alt="Home Page" style="max-width: 100%;" >
+  <img src="https://api.microlink.io/?url=https://Ghost-Talk.vercel.app&screenshot=true&meta=false&embed=screenshot.url&type=jpeg&overlay.browser=dark&overlay.background=linear-gradient%28225deg%2C+%23FF057C+0%25%2C+%238D0B93+50%25%2C+%23321575+100%25%29" alt="Home Page" style="max-width: 100%;" >
 </div>
 
 ## Installation 🛠️
@@ -37,11 +37,11 @@ Share your thoughts and experiences anonymously by posting on our platform — n
 ### 1. Clone this repository using
 
 ```bash
-git clone https://github.com/avalynndev/anonypost.git
+git clone https://github.com/Coder-philosopher/ghost-talk.git
 ```
 
 ```bash
-cd anonypost
+cd Ghost-Talk
 ```
 
 ### 2. Installation
@@ -54,7 +54,7 @@ npm install
 
 ### Add a ENV FILE with:
 ```env
-DATABASE_URL="postgresql://postgres:password@localhost:5432/anonypost"
+DATABASE_URL="postgresql://postgres:password@localhost:5432/Ghost-Talk"
 ```
 
 ### 3. Run on development &/or production
@@ -71,9 +71,9 @@ npm run dev
 npm start
 ```
 
-> Deploy **your own anonypost** Instance on Vercel
+> Deploy **your own Ghost-Talk** Instance on Vercel
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Favalynndev%2Fanonypost&env=DATABASE_URL)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Favalynndev%2FGhost-Talk&env=DATABASE_URL)
 
 ## Found a Bug? 🐞
 
@@ -81,7 +81,7 @@ Uh-oh, looks like you stumbled upon a bug? No worries, we're here to squash it! 
 
 ## Contributors 🤲
 
-<img height="50" src="https://contrib.rocks/image?repo=avalynndev/anonypost" />
+<img height="50" src="https://contrib.rocks/image?repo=avalynndev/Ghost-Talk" />
 
 #### Want to Help Out?
 

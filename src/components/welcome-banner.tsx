@@ -11,25 +11,25 @@ export function WelcomeBanner() {
 
   useEffect(() => {
     // Check if the user has seen the welcome banner before
-    const hasSeenBanner = localStorage.getItem("ghosttalk-welcomed");
+    const hasSeenBanner = sessionStorage.getItem("ghosttalk-welcomed");
     
     if (!hasSeenBanner) {
       // Show the banner after a short delay
       const timer = setTimeout(() => {
         setIsOpen(true);
-        localStorage.setItem("ghosttalk-welcomed", "true");
+        sessionStorage.setItem("ghosttalk-welcomed", "true");
       }, 1500);
       
       return () => clearTimeout(timer);
     } else {
       // Check if this is the start of a new session to show the mini banner
-      const lastVisit = localStorage.getItem("ghosttalk-last-visit");
+      const lastVisit = sessionStorage.getItem("ghosttalk-last-visit");
       const now = new Date().toISOString();
       
       if (!lastVisit || new Date(now).getTime() - new Date(lastVisit).getTime() > 3600000) {
         // If more than an hour has passed or first visit
         setIsBannerVisible(true);
-        localStorage.setItem("ghosttalk-last-visit", now);
+        sessionStorage.setItem("ghosttalk-last-visit", now);
       }
     }
   }, []);
@@ -62,7 +62,7 @@ export function WelcomeBanner() {
             </ul>
             
             <p className="text-sm text-muted-foreground">
-              Start by creating your first ghost message using the &qout;New Post&quot; button.
+              Start by creating your first ghost message using [New Post] button.
             </p>
           </div>
         </DialogContent>

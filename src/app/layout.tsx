@@ -1,14 +1,25 @@
 import "~/styles/globals.css";
-
-import { GeistSans } from "geist/font/sans";
+import { Bricolage_Grotesque } from "next/font/google"; 
 import { type Metadata } from "next";
+
+// Wrappers
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { TRPCReactProvider } from "~/trpc/react";
+
+// Components
 import { Navbar } from "~/components/navbar";
 import { Footer } from "~/components/footer";
 import { Toaster } from "~/components/ui/toaster";
 import { ScrollToTop } from "~/components/scroll-to-top";
 import { WelcomeBanner } from "~/components/welcome-banner";
+
+
+const grotesk = Bricolage_Grotesque({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-grotesk",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "GhostTalk",
@@ -28,7 +39,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${GeistSans.variable}`}>
+    <html lang="en" suppressHydrationWarning className={grotesk.variable}>
       <head>
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/site.webmanifest" />

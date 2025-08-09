@@ -1,106 +1,99 @@
-// components/Post.tsx
 "use client";
+
 import { useEffect, useState, useRef } from "react";
 import { formatDate } from "~/lib/utils";
 import { api } from "~/trpc/react";
+import { cn } from "~/lib/utils";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
+  
 } from "~/components/ui/dropdown-menu";
-import {
-  CornerBottomLeftIcon,
-  ReloadIcon,
-} from "@radix-ui/react-icons";
-import { Badge } from "./ui/badge";
+
+import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
-import { Textarea } from "./ui/textarea";
-import { Input } from "./ui/input";
+import { Textarea } from "~/components/ui/textarea";
+import { Input } from "~/components/ui/input";
 import { toast } from "~/components/ui/use-toast";
-import { 
-  MessageCircle, 
+
+import {
+  MessageCircle,
   Share,
   X,
   AlertCircle,
   Ghost,
   Search,
+  CornerDownLeft,
+  RefreshCcw,
 } from "lucide-react";
-import { cn } from "~/lib/utils";
 
 export default function Post() {
-  // Use useRef for tracking client-side initialization
   const hasMounted = useRef(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [newReply, setNewReply] = useState("");
   const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
   const postContainerRef = useRef<HTMLDivElement>(null);
-  
-  // Mark component as mounted after hydration
+
   useEffect(() => {
     hasMounted.current = true;
   }, []);
-  
+
   const copyLinkToClipboard = async () => {
     try {
-      const url = window.location.origin;
+      const url = window.location.href;
       await navigator.clipboard.writeText(url);
       toast({
         title: "Link copied",
-        description: "The link has been copied to your clipboard",
+        description: "Copied current page URL to clipboard.",
       });
     } catch (error) {
-      console.error("Failed to copy link:", error);
+      console.error("Copy failed", error);
+      toast({
+        variant: "destructive",
+        title: "Copy failed",
+        description: "Could not copy the link.",
+      });
     }
   };
-  
-  // Use regular query instead of suspense query
-  const { 
-    data: posts, 
-    refetch, 
-    isLoading, 
-    isError, 
-    error 
-  } = api.post.getPosts.useQuery(undefined, {
-    staleTime: 5 * 60 * 1000, // 5 minutes
+
+  const { data: posts, refetch, isLoading, isError, error } = api.post.getPosts.useQuery(undefined, {
+    staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
     retry: 2,
   });
-  
-  // Handle error display separately using useEffect
+
   useEffect(() => {
     if (isError && error && hasMounted.current) {
-      console.error("Error fetching posts:", error);
       toast({
         variant: "destructive",
-        title: "Error fetching posts",
-        description: "Please try refreshing the page"
+        title: "Failed to load posts",
+        description: error.message || "Please try refreshing",
       });
     }
   }, [isError, error]);
-  
+
   const addReplyMutation = api.post.addReply.useMutation({
     onSuccess: () => {
       void refetch();
       if (hasMounted.current) {
         toast({
           title: "Reply added",
-          description: "Your reply has been posted successfully!",
-          variant: "default",
+          description: "Your reply was posted successfully!",
         });
       }
     },
     onError: (err) => {
-      console.error("Error adding reply:", err);
       if (hasMounted.current) {
         toast({
           variant: "destructive",
-          title: "Error adding reply",
+          title: "Failed to add reply",
           description: err.message || "Please try again",
         });
       }
-    }
+    },
   });
 
   const handleAddReply = async (postId: number) => {
@@ -108,131 +101,121 @@ export default function Post() {
       toast({
         variant: "destructive",
         title: "Reply cannot be empty",
-        description: "Please enter a reply",
+        description: "Please enter a reply.",
       });
       return;
     }
-
     await addReplyMutation.mutateAsync({ postId, reply: newReply });
     setNewReply("");
     setSelectedPostId(null);
   };
 
-  // Safely filter posts if they exist
-  const filteredPosts = posts?.filter((post) => {
-    if (!searchTerm.trim()) return true;
-    const searchTermLowercase = searchTerm.toLowerCase();
-    const postNameLowercase = post.name.toLowerCase();
-    return postNameLowercase.includes(searchTermLowercase);
-  }) ?? [];
+  const filteredPosts = posts?.filter((post) =>
+    post.name.toLowerCase().includes(searchTerm.toLowerCase())
+  ) ?? [];
 
-  // Sort posts with most recent first
-  const sortedPosts = [...filteredPosts].sort((a, b) => 
-    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  const sortedPosts = [...filteredPosts].sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   );
 
-  // Don't render until client-side
-  if (typeof window === 'undefined') {
-    return null;
-  }
+  if (typeof window === "undefined") return null;
 
-  if (isLoading) return (
-    <div className="flex h-[40vh] w-full flex-col items-center justify-center">
-      <div className="animate-pulse-shadow rounded-full bg-primary/5 p-6">
-        <ReloadIcon className="h-8 w-8 animate-spin text-primary" />
+  if (isLoading)
+    return (
+      <div className="flex flex-col items-center justify-center gap-4 h-[40vh] w-full">
+        <RefreshCcw className="animate-spin text-primary h-10 w-10" />
+        <p className="text-muted-foreground">Loading conversations...</p>
       </div>
-      <span className="mt-4 text-muted-foreground">Loading conversations...</span>
-    </div>
-  );
+    );
 
-  if (isError) return (
-    <div className="flex h-[40vh] w-full flex-col items-center justify-center text-center">
-      <AlertCircle className="h-10 w-10 text-destructive" />
-      <p className="mt-4 text-destructive">Error loading posts: {error?.message}</p>
-      <Button onClick={() => void refetch()} className="mt-4" variant="outline">
-        Try Again
-      </Button>
-    </div>
-  );
+  if (isError)
+    return (
+      <div className="flex flex-col items-center justify-center gap-4 h-[40vh] w-full text-center">
+        <AlertCircle className="text-destructive h-12 w-12" />
+        <p className="text-destructive">{error?.message || "Failed to load posts"}</p>
+        <Button variant="outline" onClick={() => void refetch()}>
+          Try Again
+        </Button>
+      </div>
+    );
 
-  if (!posts || posts.length === 0) return (
-    <div className="flex h-[40vh] w-full flex-col items-center justify-center text-center">
-      <Ghost className="h-12 w-12 text-muted-foreground/50" />
-      <p className="mt-4 text-muted-foreground">No messages found yet. Be the first to start a conversation!</p>
-    </div>
-  );
+  if (!posts?.length)
+    return (
+      <div className="flex flex-col items-center justify-center gap-4 h-[40vh] w-full text-center text-muted-foreground">
+        <Ghost className="h-14 w-14 opacity-50" />
+        <p>No messages found. Be the first to start a conversation!</p>
+      </div>
+    );
 
-  const renderPostCard = (post: typeof posts[0]) => (
-    <div
+  const PostCard = ({ post }: { post: typeof posts[0] }) => (
+    <article
       key={post.id}
-      className="group w-full overflow-hidden rounded-xl border border-border/60 bg-card p-5 shadow-sm transition-all duration-200 hover:border-border hover:shadow-md"
+      className="group relative w-full rounded-xl border border-border bg-card p-6 shadow-md hover:shadow-lg transition-shadow duration-300"
     >
-      <div className="mb-2 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="text-xs text-muted-foreground">
-            {formatDate(post.createdAt)}
-          </div>
-          {post.isAdmin && (
-            <Badge variant="secondary" className="text-xs font-normal">
-              <Ghost className="mr-1 h-3 w-3" />
-              ADMIN
-            </Badge>
-          )}
-        </div>
-      </div>
-      
-      <div className="my-3 whitespace-pre-wrap break-words text-foreground">
+      {/* Post Header */}
+      <header className="flex justify-between items-center mb-4">
+        <time
+          dateTime={post.createdAt}
+          className="text-xs text-muted-foreground"
+          title={new Date(post.createdAt).toLocaleString()}
+        >
+          {formatDate(post.createdAt)}
+        </time>
+        {post.isAdmin && (
+          <Badge variant="secondary" className="flex items-center gap-1 text-xs font-semibold">
+            <Ghost className="h-4 w-4" />
+            Admin
+          </Badge>
+        )}
+      </header>
+
+      {/* Post Content */}
+      <section className="whitespace-pre-wrap text-foreground text-base leading-relaxed">
         {post.name}
-      </div>
-      
-      {post.replies && post.replies.length > 0 && (
-        <div className="mt-4 space-y-2 rounded-lg bg-muted/30 p-3">
-          {post.replies.map((reply, index) => (
+      </section>
+
+      {/* Replies */}
+      {post.replies?.length > 0 && (
+        <section className="mt-6 rounded-lg bg-muted/30 p-4 space-y-3 border border-border/50">
+          {post.replies.map((reply, idx) => (
             <div
-              key={index}
+              key={idx}
               className={cn(
                 "text-sm text-muted-foreground",
-                index > 0 && "ml-4 border-l-2 border-border/50 pl-3"
+                idx > 0 ? "ml-4 border-l-2 border-border/50 pl-3" : "font-medium flex items-center gap-1"
               )}
             >
-              {index === 0 && (
-                <span className="mr-1 inline-flex items-center gap-1 text-xs font-medium text-muted-foreground">
-                  <CornerBottomLeftIcon className="h-3 w-3" />
+              {idx === 0 && (
+                <>
+                  <CornerDownLeft className="h-4 w-4" />
                   Reply:
-                </span>
+                </>
               )}
               <span className="whitespace-pre-wrap">{reply}</span>
             </div>
           ))}
-        </div>
+        </section>
       )}
 
-      <div className="mt-4 flex items-center gap-2">
+      {/* Actions */}
+      <footer className="mt-6 flex items-center gap-3 justify-between">
         <Button
-          onClick={() => setSelectedPostId(selectedPostId === post.id ? null : post.id)}
           variant="ghost"
           size="sm"
-          className="h-8 gap-1 text-xs text-muted-foreground hover:text-foreground"
+          className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+          onClick={() => setSelectedPostId(selectedPostId === post.id ? null : post.id)}
+          aria-expanded={selectedPostId === post.id}
+          aria-controls={`reply-box-${post.id}`}
         >
           <MessageCircle className="h-4 w-4" />
-          <span>{selectedPostId === post.id ? "Cancel" : "Reply"}</span>
+          {selectedPostId === post.id ? "Cancel" : "Reply"}
         </Button>
-        
+
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 gap-1 text-xs text-muted-foreground hover:text-foreground"
-            >
-              <Share className="h-4 w-4" />
-              <span className="hidden sm:inline-block">Share</span>
-            </Button>
-          </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-44">
             <DropdownMenuItem
               onClick={copyLinkToClipboard}
-              className="cursor-pointer gap-2 text-sm"
+              className="cursor-pointer gap-2 text-sm flex items-center"
             >
               <Share className="h-4 w-4" />
               Copy link
@@ -240,30 +223,35 @@ export default function Post() {
             <DropdownMenuSeparator />
           </DropdownMenuContent>
         </DropdownMenu>
-      </div>
+      </footer>
 
+      {/* Reply Input */}
       {selectedPostId === post.id && (
-        <div className="mt-4 rounded-lg border border-border/60 bg-card/30 p-3 shadow-sm">
+        <div
+          id={`reply-box-${post.id}`}
+          className="mt-4 rounded-lg border border-border/60 bg-card/30 p-4 shadow-inner"
+        >
           <Textarea
             value={newReply}
             onChange={(e) => setNewReply(e.target.value)}
             placeholder="Add your reply..."
-            className="min-h-24 resize-none border-border/50 bg-background text-sm shadow-none focus-visible:ring-1 focus-visible:ring-primary/40"
+            className="min-h-[96px] resize-none border-border/50 bg-background text-sm focus-visible:ring-2 focus-visible:ring-primary/50"
+            aria-label="Add reply"
           />
-          <div className="mt-3 flex justify-end gap-2">
+          <div className="mt-3 flex justify-end gap-3">
             <Button
-              onClick={() => setSelectedPostId(null)}
               variant="ghost"
               size="sm"
-              className="h-8 gap-1 text-xs"
+              className="gap-1 text-xs"
+              onClick={() => setSelectedPostId(null)}
             >
               <X className="h-4 w-4" />
               Cancel
             </Button>
             <Button
-              onClick={() => handleAddReply(post.id)}
               size="sm"
-              className="h-8 gap-1 text-xs"
+              className="gap-1 text-xs"
+              onClick={() => handleAddReply(post.id)}
             >
               <MessageCircle className="h-4 w-4" />
               Post Reply
@@ -271,42 +259,51 @@ export default function Post() {
           </div>
         </div>
       )}
-    </div>
+    </article>
   );
 
   return (
-    <div className="w-full" ref={postContainerRef}>
-      <div className="mb-6 flex items-center gap-3 rounded-lg border border-border/60 bg-background p-1.5 shadow-sm focus-within:border-primary/50 focus-within:ring-1 focus-within:ring-primary/20">
-        <Search className="ml-2 h-4 w-4 text-muted-foreground" />
+    <section
+      className="w-full max-w-5xl mx-auto px-4 py-6 space-y-6"
+      ref={postContainerRef}
+      aria-live="polite"
+    >
+      {/* Search */}
+      <div className="flex items-center gap-3 rounded-lg border border-border/60 bg-background p-3 shadow-sm focus-within:ring-2 focus-within:ring-primary/40">
+        <Search className="h-5 w-5 text-muted-foreground" />
         <Input
           type="search"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder="Search conversations..."
-          className="h-9 border-0 bg-transparent text-sm shadow-none focus-visible:ring-0"
+          className="h-10 border-0 bg-transparent text-base shadow-none focus-visible:ring-0"
+          aria-label="Search conversations"
+          autoComplete="off"
         />
         {searchTerm && (
-          <Button 
-            variant="ghost" 
-            size="sm" 
+          <Button
+            variant="ghost"
+            size="sm"
             className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
             onClick={() => setSearchTerm("")}
+            aria-label="Clear search"
           >
-            <X className="h-4 w-4" />
+            <X className="h-5 w-5" />
           </Button>
         )}
       </div>
 
+      {/* Posts List */}
       <div className="grid grid-cols-1 gap-6">
         {sortedPosts.length > 0 ? (
-          sortedPosts.map(renderPostCard)
+          sortedPosts.map((post) => <PostCard key={post.id} post={post} />)
         ) : (
-          <div className="flex h-[20vh] w-full flex-col items-center justify-center text-center">
-            <Search className="h-8 w-8 text-muted-foreground/50" />
-            <p className="mt-4 text-muted-foreground">No messages match your search. Try something else?</p>
+          <div className="flex flex-col items-center justify-center gap-3 h-[20vh] w-full text-center text-muted-foreground">
+            <Search className="h-10 w-10 opacity-50" />
+            <p>No messages match your search. Try something else?</p>
           </div>
         )}
       </div>
-    </div>
+    </section>
   );
 }
